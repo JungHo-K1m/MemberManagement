@@ -1,4 +1,4 @@
-package com.project.login.api.config;
+package com.example.membermanagement.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;

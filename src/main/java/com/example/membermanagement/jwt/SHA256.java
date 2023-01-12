@@ -1,4 +1,4 @@
-package com.example.manageuser.config;
+package com.example.membermanagement.jwt;
 
 import org.springframework.context.annotation.Bean;
 

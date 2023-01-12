@@ -1,4 +1,4 @@
-package com.project.login.api.v1.dto;
+package com.example.membermanagement.dto;
 
 import lombok.Builder;
 import lombok.Getter;

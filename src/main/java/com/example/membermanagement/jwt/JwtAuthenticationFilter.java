@@ -1,4 +1,4 @@
-package com.project.login.api.jwt;
+package com.example.membermanagement.jwt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

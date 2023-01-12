@@ -1,7 +1,7 @@
-package com.project.login.api.security;
+package com.example.membermanagement.config;
 
-import com.project.login.api.jwt.JwtAuthenticationFilter;
-import com.project.login.api.jwt.JwtTokenProvider;
+import com.example.membermanagement.jwt.JwtAuthenticationFilter;
+import com.example.membermanagement.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -35,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
                 // JwtAuthenticationFilter를 UsernamePasswordAuthentictaionFilter 전에 적용시킨다.
     }
+
 
     // 암호화에 필요한 PasswordEncoder Bean 등록
     @Bean

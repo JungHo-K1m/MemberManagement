@@ -1,4 +1,4 @@
-package com.project.login.api.security;
+package com.example.membermanagement.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

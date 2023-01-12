@@ -1,4 +1,4 @@
-package com.project.login.api.lib;
+package com.example.membermanagement.lib;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
