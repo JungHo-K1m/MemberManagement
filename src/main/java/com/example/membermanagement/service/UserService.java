@@ -68,13 +68,18 @@ public class UserService implements UserDetailsService {
             return response.fail("해당하는 유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
 
+        System.out.println("유저 체크 : " + login.getUserId());
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
 
+        System.out.println("authentication 객체 생성");
+
         // 2. 실제 검증 (사용자 비밀번호 체크)이 이루어지는 부분
         // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+
 
         System.out.println("토큰 생성");
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
