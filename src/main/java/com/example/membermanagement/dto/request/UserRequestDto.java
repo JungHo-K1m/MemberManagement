@@ -1,9 +1,9 @@
 package com.example.membermanagement.dto.request;
 
-import com.example.membermanagement.jwt.SHA256;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -37,11 +37,10 @@ public class UserRequestDto {
         @NotEmpty(message = "비밀번호는 필수 입력값입니다.")
         private String userPw;
 
-        SHA256 sha256 = new SHA256();
-
 
         public UsernamePasswordAuthenticationToken toAuthentication() throws NoSuchAlgorithmException {
-            return new UsernamePasswordAuthenticationToken(userId, sha256.encrypt(sha256.encrypt(userPw)));
+            System.out.println("encoding PW : " + getUserPw());
+            return new UsernamePasswordAuthenticationToken(userId, userPw);
         }
     }
 

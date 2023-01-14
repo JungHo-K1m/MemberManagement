@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -39,12 +40,25 @@ public class UserController {
         return userService.login(login);
     }
 
+    @PostMapping("/reissue")
+    public ResponseEntity<?> reissue(@Validated UserRequestDto.Reissue reissue, Errors errors){
+        if(errors.hasErrors()){
+            return response.invalidFields(Helper.refineErrors(errors));
+        }
+        return userService.reissue(reissue);
+    }
+
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@Validated UserRequestDto.Logout logout, Errors errors) {
+    public ResponseEntity<?> logout(@Validated @RequestBody UserRequestDto.Logout logout, Errors errors) {
         if (errors.hasErrors()) {
             return response.invalidFields(Helper.refineErrors(errors));
         }
         return userService.logout(logout);
     }
 
+    @GetMapping("/authority")
+    public ResponseEntity<?> authority() {
+        log.info("ADD ROLE_ADMIN");
+        return userService.authority();
+    }
 }
