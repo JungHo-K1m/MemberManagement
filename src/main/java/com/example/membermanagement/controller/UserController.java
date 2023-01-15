@@ -13,11 +13,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 @Controller
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
@@ -60,5 +62,13 @@ public class UserController {
     public ResponseEntity<?> authority() {
         log.info("ADD ROLE_ADMIN");
         return userService.authority();
+    }
+
+    @RequestMapping("/test")
+    public ResponseEntity<?> authenticationTest(@Validated @RequestBody UserRequestDto.Reissue auth, Errors errors){
+        if (errors.hasErrors()) {
+            return response.invalidFields(Helper.refineErrors(errors));
+        }
+        return userService.authenticationTest(auth);
     }
 }

@@ -43,8 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // 암호화에 필요한 PasswordEncoder Bean 등록
     @Bean
     public PasswordEncoder passwordEncoder() {
-        //return new BCryptPasswordEncoder();
-        return new StandardPasswordEncoder();
+        return new BCryptPasswordEncoder();
+        //return new StandardPasswordEncoder();
     }
 
     /*

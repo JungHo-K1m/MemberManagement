@@ -6,8 +6,12 @@ import com.example.membermanagement.dto.response.UserResponseDto;
 import com.example.membermanagement.entity.Role;
 import com.example.membermanagement.entity.Users;
 import com.example.membermanagement.jwt.JwtTokenProvider;
+import com.example.membermanagement.jwt.SHA256;
 import com.example.membermanagement.repository.UserRepository;
 import com.example.membermanagement.security.SecurityUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -48,11 +52,13 @@ public class UserService {
         Users users = new Users();
         users.setUserId(signUp.getUserId());
         users.setUserEmail(signUp.getUserEmail());
-        users.setUserPw(passwordEncoder.encode(passwordEncoder.encode(signUp.getUserPw()))); //sha256암호화 2번 돌린 비밀번호를 저장.
+        //users.setUserPw(passwordEncoder.encode(signUp.getUserPw())); //sha256암호화 2번 돌린 비밀번호를 저장.
+        SHA256 sha256 = new SHA256();
+        users.setUserPw(sha256.encrypt(sha256.encrypt(signUp.getUserPw())));
         users.setUserRole(Role.USER);
         userRepository.save(users);
 
-        return response.success("회원가입에 성공하였습니다.");
+        return response.success(users,"회원가입에 성공했습니다.", HttpStatus.OK);
     }
 
 
@@ -112,8 +118,7 @@ public class UserService {
         UserResponseDto.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         // 5. RefreshToken Redis 업데이트
-        redisTemplate.opsForValue()
-                .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         return response.success(tokenInfo, "Token 정보가 갱신되었습니다.", HttpStatus.OK);
     }
@@ -149,8 +154,21 @@ public class UserService {
         Users user = userRepository.findByuserId(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("No authentication information."));
 
-
-
         return response.success();
+    }
+
+
+    public ResponseEntity<?> authenticationTest(UserRequestDto.Reissue auth){
+        if((jwtTokenProvider.getExpiration(auth.getAccessToken()) <= 0.0) && (jwtTokenProvider.getExpiration(auth.getRefreshToken()) <= 0.0))
+            return response.success("로그인을 다시 해주세요.");
+        else if ((jwtTokenProvider.getExpiration(auth.getAccessToken()) > 0.0) && (jwtTokenProvider.getExpiration(auth.getRefreshToken()) <= 0.0)) {
+            return response.success("로그인을 다시 해주세요.");
+        } else if ((jwtTokenProvider.getExpiration(auth.getAccessToken()) <= 0.0) && (jwtTokenProvider.getExpiration(auth.getRefreshToken()) > 0.0)) {
+            //access token 재발급
+            reissue(auth);
+            return response.success("Access Token 재발급");
+        }
+
+        return response.success("Success");
     }
 }

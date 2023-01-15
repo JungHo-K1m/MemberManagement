@@ -1,5 +1,6 @@
 package com.example.membermanagement.dto.request;
 
+import com.example.membermanagement.jwt.SHA256;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,8 +40,10 @@ public class UserRequestDto {
 
 
         public UsernamePasswordAuthenticationToken toAuthentication() throws NoSuchAlgorithmException {
+            SHA256 sha256 = new SHA256();
             System.out.println("encoding PW : " + getUserPw());
-            return new UsernamePasswordAuthenticationToken(userId, userPw);
+            String enPW = sha256.encrypt(sha256.encrypt(getUserPw()));
+            return new UsernamePasswordAuthenticationToken(userId, enPW);
         }
     }
 
