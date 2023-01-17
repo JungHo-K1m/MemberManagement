@@ -39,11 +39,9 @@ public class UserRequestDto {
         private String userPw;
 
 
-        public UsernamePasswordAuthenticationToken toAuthentication() throws NoSuchAlgorithmException {
-            SHA256 sha256 = new SHA256();
-            System.out.println("encoding PW : " + getUserPw());
-            String enPW = sha256.encrypt(sha256.encrypt(getUserPw()));
-            return new UsernamePasswordAuthenticationToken(userId, enPW);
+        public UsernamePasswordAuthenticationToken toAuthentication() {
+
+            return new UsernamePasswordAuthenticationToken(userId, userPw);
         }
     }
 

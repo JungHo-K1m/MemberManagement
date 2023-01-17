@@ -53,8 +53,8 @@ public class UserService {
         users.setUserId(signUp.getUserId());
         users.setUserEmail(signUp.getUserEmail());
         //users.setUserPw(passwordEncoder.encode(signUp.getUserPw())); //sha256암호화 2번 돌린 비밀번호를 저장.
-        SHA256 sha256 = new SHA256();
-        users.setUserPw(sha256.encrypt(sha256.encrypt(signUp.getUserPw())));
+        //SHA256 sha256 = new SHA256();
+        users.setUserPw(passwordEncoder.encode(signUp.getUserPw()));
         users.setUserRole(Role.USER);
         userRepository.save(users);
 
