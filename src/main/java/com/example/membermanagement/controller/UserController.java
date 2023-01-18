@@ -39,6 +39,7 @@ public class UserController {
         return userService.login(login);
     }
 
+    /*
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(@Validated UserRequestDto.Reissue reissue, Errors errors){
         if(errors.hasErrors()){
@@ -46,6 +47,8 @@ public class UserController {
         }
         return userService.reissue(reissue);
     }
+
+     */
 
     @GetMapping("/logout")
     public ResponseEntity<?> logout(@RequestBody UserRequestDto.Logout logout, Errors errors) {
@@ -55,6 +58,8 @@ public class UserController {
         return userService.logout(logout);
     }
 
+
+/*
     @GetMapping("/authority")
     public ResponseEntity<?> authority() {
         log.info("ADD ROLE_ADMIN");
@@ -62,10 +67,14 @@ public class UserController {
     }
 
     @RequestMapping("/test")
-    public ResponseEntity<?> authenticationTest(@Validated @RequestBody UserRequestDto.Reissue auth, Errors errors){
+    public ResponseEntity<?> authenticationTest( UserRequestDto.Reissue auth, Errors errors){
         if (errors.hasErrors()) {
             return response.invalidFields(Helper.refineErrors(errors));
         }
         return userService.authenticationTest(auth);
     }
+
+ */
+
+
 }
