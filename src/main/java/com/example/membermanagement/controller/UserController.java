@@ -49,45 +49,35 @@ public class UserController {
     public ResponseEntity<?> logout(@RequestHeader("authorization") String accessToken) {
 
         String[] result = accessToken.split(" ");       //Bearer 텍스트 분리
-        System.out.println(Arrays.toString(result));
         String ac = result[1];                              //accessToken만 따로 저장
 
         return userService.logout(ac);
-
-        /*
-        if (errors.hasErrors()) {
-            return response.invalidFields(Helper.refineErrors(errors));
-        }
-        return userService.logout(logout);
-
-         */
     }
 
-    /*
+
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(@Validated UserRequestDto.Reissue reissue, Errors errors){
+    public ResponseEntity<?> reissue(@Validated @RequestBody UserRequestDto.Reissue reissue, Errors errors){
         if(errors.hasErrors()){
             return response.invalidFields(Helper.refineErrors(errors));
         }
         return userService.reissue(reissue);
     }
 
-     */
-    /*
-    @GetMapping("/authority")
-    public ResponseEntity<?> authority() {
-        log.info("ADD ROLE_ADMIN");
-        return userService.authority();
-    }
 
-    @RequestMapping("/test")
-    public ResponseEntity<?> authenticationTest( UserRequestDto.Reissue auth, Errors errors){
+    @GetMapping("/test")
+    public ResponseEntity<?> authenticationTest(@RequestHeader("authorization") String accessToken,
+                                                @RequestHeader("RefreshToken") String refreshToken){
+        String[] result = accessToken.split(" ");       //Bearer 텍스트 분리
+        String ac = result[1];                              //accessToken만 따로 저장
+        String rc = refreshToken;
+
+        /*
         if (errors.hasErrors()) {
             return response.invalidFields(Helper.refineErrors(errors));
         }
         return userService.authenticationTest(auth);
+        */
+
+        return userService.authenticationTest(ac, rc);
     }
-
- */
-
 }

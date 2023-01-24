@@ -150,7 +150,7 @@ public class JwtTokenProvider {
 
     public boolean checkToken(String ac, String rc){
 
-        /*
+
         Long acTime = getExpiration(ac);
         Long rcTime = getExpiration(rc);
 
@@ -165,9 +165,7 @@ public class JwtTokenProvider {
             return false;
         }
 
-         */
-
-
+        /*
         if(isTokenExpired(rc)){
             return false;
         } else if (!isTokenExpired(ac) && !isTokenExpired(rc)) {
@@ -175,6 +173,8 @@ public class JwtTokenProvider {
         } else if (!isTokenExpired(ac) && isTokenExpired(rc)) {
             return false;
         }
+
+         */
 
         return true;
     }
@@ -187,7 +187,7 @@ public class JwtTokenProvider {
         }
     }
 
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }

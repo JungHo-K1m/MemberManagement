@@ -21,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -46,8 +47,7 @@ public class UserService {
     public ResponseEntity<?> insertUser(UserRequestDto.SignUp signUp) throws NoSuchAlgorithmException {
 
         Optional<Users> byId = userRepository.findByuserId(signUp.getUserId());
-        if(byId.isPresent())
-            return null;
+        if(byId.isPresent()) return null;
 
         Users users = new Users();
         users.setUserId(signUp.getUserId());
@@ -55,6 +55,7 @@ public class UserService {
         users.setUserPw(passwordEncoder.encode(signUp.getUserPw()));
         users.setUserRole(Role.USER);
         userRepository.save(users);
+
 
         return response.success(users,"회원가입에 성공했습니다.", HttpStatus.OK);
     }
@@ -69,17 +70,13 @@ public class UserService {
 
 
         UsernamePasswordAuthenticationToken authenticationToken = login.toAuthentication();
-
-
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
         UserResponseDto.TokenInfo token = jwtTokenProvider.createToken(authentication, login);
 
         System.out.println("access Token : " + token.getAccessToken());
         System.out.println("refresh Token : " + token.getRefreshToken());
 
         redisTemplate.opsForValue().set("RT:" + login.getUserId(), token.getRefreshToken(), token.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
-
 
         /*
         System.out.println("유저 체크 : " + login.getUserId());
@@ -129,7 +126,7 @@ public class UserService {
     }
 
 
-    /*
+
     public ResponseEntity<?> reissue(UserRequestDto.Reissue reissue) {
         // 1. Refresh Token 검증
         if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
@@ -157,9 +154,7 @@ public class UserService {
 
         return response.success(tokenInfo, "Token 정보가 갱신되었습니다.", HttpStatus.OK);
     }
-     */
 
-    /*
     public ResponseEntity<?> authority() {
         // SecurityContext에 담겨 있는 authentication userEamil 정보
         String userEmail = SecurityUtil.getCurrentUserEmail();
@@ -171,7 +166,8 @@ public class UserService {
     }
 
 
-    public ResponseEntity<?> authenticationTest(UserRequestDto.Reissue auth){
+    public ResponseEntity<?> authenticationTest(String ac, String rc){
+        /*
         if((jwtTokenProvider.getExpiration(auth.getAccessToken()) <= 0.0) && (jwtTokenProvider.getExpiration(auth.getRefreshToken()) <= 0.0))
             return response.success("로그인을 다시 해주세요.");
         else if ((jwtTokenProvider.getExpiration(auth.getAccessToken()) > 0.0) && (jwtTokenProvider.getExpiration(auth.getRefreshToken()) <= 0.0)) {
@@ -182,8 +178,32 @@ public class UserService {
             return response.success("Access Token 재발급");
         }
 
+         */
+        jwtTokenProvider.checkToken(ac, rc);
+
+        /*
+        if(jwtTokenProvider.isTokenExpired(ac) && jwtTokenProvider.isTokenExpired(rc)){
+            System.out.println("ac, rc are expired.");
+            return response.fail("로그인을 다시 해주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        if(!jwtTokenProvider.isTokenExpired(ac) && jwtTokenProvider.isTokenExpired(rc)){
+            System.out.println("rc is expired.");
+            return response.fail("로그인을 다시 해주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        if(jwtTokenProvider.isTokenExpired(ac) && !jwtTokenProvider.isTokenExpired(rc)){
+            //reissue(auth);
+            System.out.println("ac is expired.");
+            System.out.println("Access Token is Reissued");
+            return response.fail("Access Token 재발급", HttpStatus.BAD_REQUEST);
+        }
+
+         */
+
+        System.out.println("ac, rc are not expired.");
         return response.success("Success");
     }
-    */
+
 
 }
